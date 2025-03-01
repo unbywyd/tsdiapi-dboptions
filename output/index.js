@@ -22,6 +22,7 @@ class DbOptionsPlugin {
         if (this.config.autoRegisterControllers) {
             this.globControllersPath = path_1.default.join(__dirname, '../') + path_1.default.normalize("output/controllers/**/*.controller{.ts,.js}");
         }
+        this.config.entityName = appConfig?.entityName || appConfig['DBOPTIONS_ENTITY_NAME'] || this.config.entityName;
         ctx.logger.info("✅ tsdiapi-dboptions Plugin initialized.");
     }
 }

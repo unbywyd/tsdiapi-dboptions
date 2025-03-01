@@ -13,6 +13,18 @@
         "message": "Do you want to enable automatic controller registration?",
         "default": true
       }
+    },
+    {
+      "name": "DBOPTIONS_ENTITY_NAME",
+      "type": "string",
+      "default": "Option",
+      "configurable": true,
+      "description": "The name of the entity that will store the options",
+      "inquirer": {
+        "type": "input",
+        "message": "Enter the name of the entity that will store the options",
+        "default": "Option"
+      }
     }
   ],
   "requiredPackages": [
@@ -33,6 +45,17 @@
     {
       "name": "feature",
       "description": "Generate a feature folder for database options",
+      "args": [
+        {
+          "name": "entityName",
+          "description": "The name of the entity that will store the options",
+          "inquirer": {
+            "type": "input",
+            "message": "Enter the name of the entity that will store the options",
+            "default": "Option"
+          }
+        }
+      ],
       "files": [
         {
           "source": "generators/feature/*.*",
@@ -45,9 +68,9 @@
         {
           "path": "prisma/schema.prisma",
           "mode": "append",
-          "match": "model\\s+%PascalCase%\\s*\\{",
+          "match": "model\\s+{{pascalCase entityName}}\\s*\\{",
           "expected": false,
-          "content": "model %PascalCase% {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
+          "content": "model {{pascalCase entityName}} {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
         }
       ],
       "requiredPaths": [
@@ -63,9 +86,9 @@
     {
       "path": "prisma/schema.prisma",
       "mode": "append",
-      "match": "model\\s+%PascalCase%\\s*\\{",
+      "match": "model\\s+{{pascalCase entityName}}\\s*\\{",
       "expected": false,
-      "content": "model %PascalCase% {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
+      "content": "model {{pascalCase entityName}} {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
     }
   ],
   "postMessages": [

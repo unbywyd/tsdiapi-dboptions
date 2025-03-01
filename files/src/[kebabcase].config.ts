@@ -1,8 +1,7 @@
 import { Expose } from "class-transformer";
 import { IsBoolean } from "class-validator";
 
-
-export class {{pascalCasePluginName}}Options {
+export class {{pascalCase pluginName}}Options {
     @IsBoolean()
     @Expose()
     isDev: boolean = false;

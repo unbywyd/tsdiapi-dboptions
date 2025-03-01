@@ -4,6 +4,7 @@ import path from "path";
 
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
+    entityName?: string;
 };
 
 export class DbOptionsPlugin implements AppPlugin {
@@ -24,6 +25,8 @@ export class DbOptionsPlugin implements AppPlugin {
         if (this.config.autoRegisterControllers) {
             this.globControllersPath = path.join(__dirname, '../') + path.normalize("output/controllers/**/*.controller{.ts,.js}");
         }
+
+        this.config.entityName = appConfig?.entityName || appConfig['DBOPTIONS_ENTITY_NAME'] || this.config.entityName;
 
         ctx.logger.info("✅ tsdiapi-dboptions Plugin initialized.");
     }

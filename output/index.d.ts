@@ -2,6 +2,7 @@ import "reflect-metadata";
 import type { AppContext, AppPlugin } from "@tsdiapi/server";
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
+    entityName?: string;
 };
 export declare class DbOptionsPlugin implements AppPlugin {
     name: string;
