@@ -69,6 +69,7 @@
         {
           "path": "prisma/schema.prisma",
           "mode": "append",
+          "isHandlebarsTemplate": true,
           "match": "model\\s+{{pascalCase entityName}}\\s*\\{",
           "expected": false,
           "content": "model {{pascalCase entityName}} {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
@@ -89,6 +90,7 @@
       "mode": "append",
       "match": "model\\s+{{pascalCase entityName}}\\s*\\{",
       "expected": false,
+      "isHandlebarsTemplate": true,
       "content": "model {{pascalCase entityName}} {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
     }
   ],
