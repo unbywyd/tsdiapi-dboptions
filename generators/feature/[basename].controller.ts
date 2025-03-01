@@ -21,7 +21,7 @@ import { RequestGuard } from "@tsdiapi/server";
 })
 @JsonController("{{kebabCase name}}")
 export class {{className}}Controller {
-    constructor(private {{camelCase}}Service: {{className}}Service) {}
+    constructor(private {{camelCase name}}Service: {{className}}Service) {}
 
     @Get("/")
     @SuccessResponse( {{pascalCase pluginName}})
