@@ -7,11 +7,11 @@ import {
 } from "routing-controllers";
 import { Service } from "typedi";
 import { OpenAPI } from "routing-controllers-openapi";
-import {{className}}Service from "./{{kebabcase}}.service";
+import {{className}}Service from "./{{kebabCase name}}.service";
 import { SuccessResponse, Summary } from "@tsdiapi/server";
 //import { JWTGuard } from "@tsdiapi/jwt-auth";
 import {  {{pascalCase pluginName}} } from "@base/{{pluginName}}.config";
-import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabcase}}.dto";
+import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabCase name}}.dto";
 import { Request, Response, NextFunction } from "express";
 import { RequestGuard } from "@tsdiapi/server";
 
@@ -19,22 +19,22 @@ import { RequestGuard } from "@tsdiapi/server";
 @OpenAPI({
     tags: ["{{className}}"],
 })
-@JsonController("{{kebabcase}}")
+@JsonController("{{kebabCase name}}")
 export class {{className}}Controller {
-    constructor(private {{camelcase}}Service: {{className}}Service) {}
+    constructor(private {{camelCase}}Service: {{className}}Service) {}
 
     @Get("/")
     @SuccessResponse( {{pascalCase pluginName}})
     @Summary("Get {{className}}")
     public async get{{className}}() {
-        return this.{{camelcase}}Service.getConfigs();
+        return this.{{camelCase name}}Service.getConfigs();
     }
 
     /*@JWTGuard({
         validateSession: (session) => {
-            return session.role === "ADMIN" ? true : "Only admin can create {{kebabcase}}";
+            return session.role === "ADMIN" ? true : "Only admin can create {{kebabCase name}}";
         },
-        guardDescription: "Only admin can create {{kebabcase}}"
+        guardDescription: "Only admin can create {{kebabCase name}}"
     })*/
     @Post("/")
     @RequestGuard(async (req: Request) => {
@@ -65,7 +65,7 @@ export class {{className}}Controller {
     public async create{{className}}(
         @Body() config: Input{{className}}DTO
     ) {
-        return this.{{camelcase}}Service.createConfig(config);
+        return this.{{camelCase name}}Service.createConfig(config);
     }
 
     @Get("/source/:name")
@@ -74,15 +74,15 @@ export class {{className}}Controller {
     public async getSource{{className}}ByName(
         @Param("name") name: string
     ) {
-        return this.{{camelcase}}Service.getSourceConfig(name);
+        return this.{{camelCase name}}Service.getSourceConfig(name);
     }
 
     @Get("/:name")
     @SuccessResponse( {{pascalCase pluginName}})
     @Summary("Get {{className}} by name")
-    public async get{{className}}ByName(
+    public async get{{className name}}ByName(
         @Param("name") name: string
     ) {
-        return this.{{camelcase}}Service.getConfig(name);
+        return this.{{camelCase}}Service.getConfig(name);
     }
 }
