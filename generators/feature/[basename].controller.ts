@@ -80,9 +80,9 @@ export class {{className}}Controller {
     @Get("/:name")
     @SuccessResponse( {{pascalCase pluginName}})
     @Summary("Get {{className}} by name")
-    public async get{{className name}}ByName(
+    public async get{{className}}ByName(
         @Param("name") name: string
     ) {
-        return this.{{camelCase}}Service.getConfig(name);
+        return this.{{camelCase name}}Service.getConfig(name);
     }
 }
