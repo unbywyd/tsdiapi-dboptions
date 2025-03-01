@@ -2,7 +2,7 @@ import { Expose } from "class-transformer";
 import { IsBoolean } from "class-validator";
 
 
-export class {{className}}Options {
+export class {{pluginName}}Options {
     @IsBoolean()
     @Expose()
     isDev: boolean = false;

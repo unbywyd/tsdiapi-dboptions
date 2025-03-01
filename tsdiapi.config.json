@@ -25,7 +25,8 @@
   "files": [
     {
       "source": "files/src/*.ts",
-      "destination": "src/"
+      "destination": "src/",
+      "isHandlebarsTemplate": true
     }
   ],
   "generators": [
@@ -70,5 +71,5 @@
   "postMessages": [
     "✅ Database options successfully installed!"
   ],
-  "postInstall": "npx prisma generate"
+  "afterInstall": "npx prisma generate"
 }

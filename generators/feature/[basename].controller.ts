@@ -10,7 +10,7 @@ import { OpenAPI } from "routing-controllers-openapi";
 import {{className}}Service from "./{{kebabcase}}.service";
 import { SuccessResponse, Summary } from "@tsdiapi/server";
 //import { JWTGuard } from "@tsdiapi/jwt-auth";
-import { {{className}}Options } from "@base/{{kebabcase}}.dboptions.config";
+import { {{className}}Options } from "@base/{{kebabcase}}.config";
 import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabcase}}.dto";
 import { Request, Response, NextFunction } from "express";
 import { RequestGuard } from "@tsdiapi/server";

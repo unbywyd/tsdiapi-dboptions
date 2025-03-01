@@ -1,7 +1,7 @@
 import { plainToClass } from "class-transformer";
 import { Service } from "typedi";
 import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabcase}}.dto";
-import { {{className}}Options } from "@base/{{kebabcase}}.dboptions.config";
+import { {{className}}Options } from "@base/{{kebabcase}}.config";
 import { client } from "@tsdiapi/prisma";
 import { toDTO } from "@tsdiapi/server";
 
