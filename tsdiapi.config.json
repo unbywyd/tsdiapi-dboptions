@@ -16,6 +16,7 @@
     },
     {
       "name": "DBOPTIONS_ENTITY_NAME",
+      "alias": "entityName",
       "type": "string",
       "default": "Option",
       "configurable": true,
