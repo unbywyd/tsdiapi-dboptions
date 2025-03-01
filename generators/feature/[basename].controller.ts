@@ -10,7 +10,7 @@ import { OpenAPI } from "routing-controllers-openapi";
 import {{className}}Service from "./{{kebabcase}}.service";
 import { SuccessResponse, Summary } from "@tsdiapi/server";
 //import { JWTGuard } from "@tsdiapi/jwt-auth";
-import { {{className}}Options } from "@base/{{kebabcase}}.config";
+import { {{pascalCasePluginName}}Options } from "@base/dboptions.config";
 import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabcase}}.dto";
 import { Request, Response, NextFunction } from "express";
 import { RequestGuard } from "@tsdiapi/server";
@@ -24,7 +24,7 @@ export class {{className}}Controller {
     constructor(private {{camelcase}}Service: {{className}}Service) {}
 
     @Get("/")
-    @SuccessResponse({{className}}Options)
+    @SuccessResponse({{pascalCasePluginName}}Options)
     @Summary("Get {{className}}")
     public async get{{className}}() {
         return this.{{camelcase}}Service.getConfigs();
@@ -61,7 +61,7 @@ export class {{className}}Controller {
         return true;
     })
     @Summary("Create {{className}}")
-    @SuccessResponse({{className}}Options)
+    @SuccessResponse({{pascalCasePluginName}}Options)
     public async create{{className}}(
         @Body() config: Input{{className}}DTO
     ) {
@@ -78,7 +78,7 @@ export class {{className}}Controller {
     }
 
     @Get("/:name")
-    @SuccessResponse({{className}}Options)
+    @SuccessResponse({{pascalCasePluginName}}Options)
     @Summary("Get {{className}} by name")
     public async get{{className}}ByName(
         @Param("name") name: string

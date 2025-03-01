@@ -2,7 +2,7 @@ import { Expose } from "class-transformer";
 import { IsBoolean } from "class-validator";
 
 
-export class {{pluginName}}Options {
+export class {{pascalCasePluginName}}Options {
     @IsBoolean()
     @Expose()
     isDev: boolean = false;

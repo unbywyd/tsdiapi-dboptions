@@ -1,13 +1,13 @@
 import { plainToClass } from "class-transformer";
 import { Service } from "typedi";
 import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabcase}}.dto";
-import { {{className}}Options } from "@base/{{kebabcase}}.config";
+import { {{pascalCasePluginName}}Options } from "@base/dboptions.config";
 import { client } from "@tsdiapi/prisma";
 import { toDTO } from "@tsdiapi/server";
 
 @Service()
 export default class {{className}}Service {
-    async getValue<K extends keyof {{className}}Options>(name: K): Promise<{{className}}Options[K] | null> {
+    async getValue<K extends keyof {{pascalCasePluginName}}Options>(name: K): Promise<{{pascalCasePluginName}}Options[K] | null> {
         try {
             const config = await client.{{camelcase}}.findUnique({
                 where: {
@@ -17,14 +17,14 @@ export default class {{className}}Service {
             if (!config) {
                 return null;
             }
-            return config.value as {{className}}Options[K];
+            return config.value as {{pascalCasePluginName}}Options[K];
         } catch (e) {
             console.error(e);
             return null;
         }
     }
 
-    async getConfig(name: string): Promise<{{className}}Options> {
+    async getConfig(name: string): Promise<{{pascalCasePluginName}}Options> {
         try {
             const config = await client.{{camelcase}}.findUnique({
                 where: {
@@ -34,16 +34,16 @@ export default class {{className}}Service {
             if (!config) {
                 return {
                     [name]: null as any
-                } as {{className}}Options;
+                } as {{pascalCasePluginName}}Options;
             }
-            return toDTO({{className}}Options, {
+            return toDTO({{pascalCasePluginName}}Options, {
                 [name]: config.value
             });
         } catch (e) {
             console.error(e);
             return {
                 [name]: null as any
-            } as {{className}}Options;
+            } as {{pascalCasePluginName}}Options;
         }
     }
 
@@ -70,7 +70,7 @@ export default class {{className}}Service {
         }
     }
 
-    async getConfigs(): Promise<{{className}}Options> {
+    async getConfigs(): Promise<{{pascalCasePluginName}}Options> {
         try {
             const config: Record<string, any> = {};
             const appKeys = await client.{{camelcase}}.findMany({
@@ -81,21 +81,21 @@ export default class {{className}}Service {
             appKeys.forEach((key) => {
                 config[key.name] = key.value;
             });
-            return plainToClass({{className}}Options, config, {
+            return plainToClass({{pascalCasePluginName}}Options, config, {
                 exposeDefaultValues: true,
                 excludeExtraneousValues: true,
             });
         } catch (e) {
             console.error(e);
-            return {} as {{className}}Options;
+            return {} as {{pascalCasePluginName}}Options;
         }
     }
 
-    async createConfig(data: Input{{className}}DTO): Promise<{{className}}Options> {
+    async createConfig(data: Input{{className}}DTO): Promise<{{pascalCasePluginName}}Options> {
         try {
             const config: Partial<Record<string, any>> = {};
             config[data.name] = data.value;
-            const dto = toDTO<any>({{className}}Options, config);
+            const dto = toDTO<any>({{pascalCasePluginName}}Options, config);
             const value = dto[data.name];
             const prev = await client.{{camelcase}}.findUnique({
                 where: {
@@ -123,7 +123,7 @@ export default class {{className}}Service {
             }
         } catch (e) {
             console.error(e);
-            return {} as {{className}}Options;
+            return {} as {{pascalCasePluginName}}Options;
         }
     }
 }

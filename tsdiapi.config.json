@@ -1,5 +1,5 @@
 {
-  "name": "tsdiapi-dboptions",
+  "name": "dboptions",
   "description": "A TSDIAPI plugin to extend Prisma functionality with dynamic database options.",
   "variables": [
     {
