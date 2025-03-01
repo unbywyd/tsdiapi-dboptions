@@ -1,0 +1,74 @@
+{
+  "name": "tsdiapi-dboptions",
+  "description": "A TSDIAPI plugin to extend Prisma functionality with dynamic database options.",
+  "variables": [
+    {
+      "name": "DBOPTIONS_AUTO_REGISTER_CONTROLLERS",
+      "type": "boolean",
+      "default": true,
+      "configurable": true,
+      "description": "Automatically register controllers",
+      "inquirer": {
+        "type": "confirm",
+        "message": "Do you want to enable automatic controller registration?",
+        "default": true
+      }
+    }
+  ],
+  "requiredPackages": [
+    "@tsdiapi/prisma",
+    "@prisma/client"
+  ],
+  "requiredPaths": [
+    "prisma/schema.prisma"
+  ],
+  "files": [
+    {
+      "source": "files/src/*.ts",
+      "destination": "src/"
+    }
+  ],
+  "generators": [
+    {
+      "name": "feature",
+      "description": "Generate a feature folder for database options",
+      "files": [
+        {
+          "source": "generators/feature/*.*",
+          "destination": "[name]",
+          "overwrite": false,
+          "isHandlebarsTemplate": true
+        }
+      ],
+      "fileModifications": [
+        {
+          "path": "prisma/schema.prisma",
+          "mode": "append",
+          "match": "model\\s+%PascalCase%\\s*\\{",
+          "expected": false,
+          "content": "model %PascalCase% {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
+        }
+      ],
+      "requiredPaths": [
+        "prisma/schema.prisma"
+      ],
+      "postMessages": [
+        "✅ Feature {{name}} generated successfully!"
+      ],
+      "afterGenerate": "npx prisma generate"
+    }
+  ],
+  "postFileModifications": [
+    {
+      "path": "prisma/schema.prisma",
+      "mode": "append",
+      "match": "model\\s+%PascalCase%\\s*\\{",
+      "expected": false,
+      "content": "model %PascalCase% {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
+    }
+  ],
+  "postMessages": [
+    "✅ Database options successfully installed!"
+  ],
+  "postInstall": "npx prisma generate"
+}
