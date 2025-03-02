@@ -45,35 +45,52 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DboptionController = void 0;
+exports.DboptionController = exports.OptionResponseDTO = exports.OptionsResponseDTO = void 0;
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = __importStar(require("typedi"));
 const routing_controllers_openapi_1 = require("routing-controllers-openapi");
 const dboption_service_1 = __importStar(require("./dboption.service"));
 const server_1 = require("@tsdiapi/server");
 const dboption_dto_1 = require("./dboption.dto");
+const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
+class OptionsResponseDTO {
+    options = {};
+}
+exports.OptionsResponseDTO = OptionsResponseDTO;
+__decorate([
+    (0, class_transformer_1.Expose)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], OptionsResponseDTO.prototype, "options", void 0);
+class OptionResponseDTO {
+    option = {};
+}
+exports.OptionResponseDTO = OptionResponseDTO;
+__decorate([
+    (0, class_transformer_1.Expose)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], OptionResponseDTO.prototype, "option", void 0);
 let DboptionController = class DboptionController {
     dboptionService;
     constructor(dboptionService) {
         this.dboptionService = dboptionService;
     }
     async createDboption(config) {
-        return this.dboptionService.createConfig(config);
+        const options = await this.dboptionService.createConfig(config);
+        return { options };
     }
     async getDboption() {
-        return this.dboptionService.getConfigs();
+        const options = await this.dboptionService.getConfigs();
+        return { options };
     }
-    /*@JWTGuard({
-        validateSession: (session) => {
-            return session.role === "ADMIN" ? true : "Only admin can create dboption";
-        },
-        guardDescription: "Only admin can create dboption"
-    })*/
     async getSourceDboptionByName(name) {
         return this.dboptionService.getSourceConfig(name);
     }
     async getDboptionByName(name) {
-        return this.dboptionService.getConfig(name);
+        const option = this.dboptionService.getConfig(name);
+        return { option };
     }
 };
 exports.DboptionController = DboptionController;
@@ -95,6 +112,7 @@ __decorate([
         security: [{ bearerAuth: [] }],
         description: "This endpoint is only accessible by admin"
     }),
+    (0, server_1.SuccessResponse)(OptionsResponseDTO),
     __param(0, (0, routing_controllers_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dboption_dto_1.InputDboptionDTO]),
@@ -103,6 +121,7 @@ __decorate([
 __decorate([
     (0, routing_controllers_1.Get)("/"),
     (0, server_1.Summary)("Get Dboption"),
+    (0, server_1.SuccessResponse)(OptionsResponseDTO),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -119,6 +138,7 @@ __decorate([
 __decorate([
     (0, routing_controllers_1.Get)("/:name"),
     (0, server_1.Summary)("Get Dboption by name"),
+    (0, server_1.SuccessResponse)(OptionResponseDTO),
     __param(0, (0, routing_controllers_1.Param)("name")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
