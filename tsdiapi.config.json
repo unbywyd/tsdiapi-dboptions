@@ -91,6 +91,12 @@
       "content": "model DbOption {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
     }
   ],
+  "preMessages": [
+    "⚠️ Before proceeding with the configuration, ensure that Prisma is installed and set up.",
+    "ℹ️ If Prisma is not installed, add the plugin using: tsdiapi plugins add prisma",
+    "❌ You can interrupt the configuration now if the plugin has not been added previously.",
+    "✅ To resume configuration later, use: tsdiapi plugins config dboptions"
+  ],
   "postMessages": [
     "✅ Database options successfully installed!",
     "⚠️ Please ensure to run the necessary database migrations and verify the Prisma database connection. This is the user's responsibility."
