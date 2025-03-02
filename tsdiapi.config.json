@@ -13,19 +13,6 @@
         "message": "Do you want to enable automatic controller registration?",
         "default": true
       }
-    },
-    {
-      "name": "DBOPTIONS_ENTITY_NAME",
-      "alias": "entityName",
-      "type": "string",
-      "default": "Option",
-      "configurable": true,
-      "description": "The name of the entity that will store the options",
-      "inquirer": {
-        "type": "input",
-        "message": "Enter the name of the entity that will store the options",
-        "default": "Option"
-      }
     }
   ],
   "requiredPackages": [
@@ -94,10 +81,11 @@
     {
       "path": "prisma/schema.prisma",
       "mode": "append",
-      "match": "model\\s+{{pascalCase entityName}}\\s*\\{",
+      "when": "DBOPTIONS_AUTO_REGISTER_CONTROLLERS == true",
+      "match": "model\\s+DbOption\\s*\\{",
       "expected": false,
       "isHandlebarsTemplate": true,
-      "content": "model {{pascalCase entityName}} {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
+      "content": "model DbOption {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
     }
   ],
   "postMessages": [
