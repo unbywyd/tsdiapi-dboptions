@@ -12,7 +12,6 @@ import { SuccessResponse, Summary, RequestGuard } from "@tsdiapi/server";
 import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
 import { Request, Response, NextFunction } from "express";
 
-class RecordDTO { }
 @Service()
 @OpenAPI({
     tags: ["Dboption"],
@@ -33,7 +32,6 @@ export class DboptionController {
         return true;
     })
     @Summary("Create Dboption")
-    @SuccessResponse(RecordDTO)
     public async createDboption(
         @Body() config: InputDboptionDTO
     ) {
@@ -41,7 +39,6 @@ export class DboptionController {
     }
 
     @Get("/")
-    @SuccessResponse(RecordDTO)
     @Summary("Get Dboption")
     public async getDboption() {
         return this.dboptionService.getConfigs();
@@ -64,7 +61,6 @@ export class DboptionController {
     }
 
     @Get("/:name")
-    @SuccessResponse(RecordDTO)
     @Summary("Get Dboption by name")
     public async getDboptionByName(
         @Param("name") name: string
