@@ -1,92 +1,99 @@
-# **dboptions Plugin for TSDIAPI**
+# **@tsdiapi/dboptions: Database Options Plugin for TSDIAPI-Server**  
 
-A TSDIAPI plugin to extend API functionality with dboptions.
-
-## 📌 About
-
-This is a **TSDIAPI** plugin designed to extend your server functionality. TSDIAPI is a modular framework that allows you to build scalable APIs with dynamic plugin support.
-
-🔗 **TSDIAPI CLI:** [@tsdiapi/cli](https://www.npmjs.com/package/@tsdiapi/cli)
+**@tsdiapi/dboptions** extends **TSDIAPI-Server** with dynamic database options, integrating seamlessly with **Prisma**. It enables storing and managing configuration settings in a database with optional DTO transformation and authentication control.
 
 ---
 
-## 📦 Installation
+## Features  
 
-You can install this plugin using npm:
+- **Prisma Integration**: Automatically adds a `DbOption` model for storing key-value configurations.  
+- **Dynamic API Routes**: Provides endpoints for managing database options.  
+- **DTO Support**: Optionally transform database-stored values using a DTO.  
+- **JWT Authentication**: Secure access using a custom **adminGuard** function.  
+- **Auto-Registration**: Automatically integrates controllers when enabled.  
+- **Feature Generator**: Allows custom entity names for full control over the setup.  
+
+---
+
+## Installation  
 
 ```bash
-npm install --save @tsdiapi/dboptions
+npm install @tsdiapi/dboptions
+```  
+
+Or use the CLI to add the plugin:  
+
+```bash
+tsdiapi plugins add dboptions
 ```
 
-Then, register the plugin in your TSDIAPI project:
+---
+
+## Usage  
+
+### Register the Plugin  
+
+Add the plugin to your **TSDIAPI-Server** setup:  
 
 ```typescript
 import { createApp } from "@tsdiapi/server";
-import createPlugin from "@tsdiapi/dboptions";
+import DboptionsPlugin from "@tsdiapi/dboptions";
+import TsdiapiPrismaPlugin from "@tsdiapi/prisma";
+import { isJWTValid } from "@tsdiapi/jwt-auth";
+import { Dboptions } from "./dboptions.config";
 
 createApp({
-    plugins: [createPlugin()]
+  plugins: [
+    DboptionsPlugin({
+      configDTO: Dboptions, // DTO for structuring option values
+      adminGuard: async (req) => {
+        const session = await isJWTValid<any>(req);
+        if (!session) {
+          return false;
+        }
+        return session.isAdmin; // Allow only admins
+      }
+    }),
+    TsdiapiPrismaPlugin()
+  ]
 });
+```  
+
+---
+
+## Configuration Options  
+
+| Option        | Type      | Default | Description |
+|--------------|----------|---------|-------------|
+| `configDTO`  | `Class`  | `null`  | DTO for transforming option values before storing or retrieving them. |
+| `adminGuard` | `Function` | `null` | Custom function to validate Bearer authentication. |
+
+---
+
+## Auto-Registration  
+
+If **DBOPTIONS_AUTO_REGISTER_CONTROLLERS** is enabled, the plugin:  
+- Adds the `DbOption` model to **Prisma** schema.  
+- Automatically registers API controllers for managing options.  
+
+To **disable auto-registration**, use:  
+
+```json
+{
+  "DBOPTIONS_AUTO_REGISTER_CONTROLLERS": false
+}
 ```
 
----
+For **manual setup**, use the **feature generator** to create a custom entity:  
 
-## 🚀 Features
-
-- 🛠 **Extend TSDIAPI** with additional functionalities.
-- ⚙ **Seamless integration** with your existing API.
-- 🏗 **Fully configurable** to match your project needs.
-
----
-
-## 🔧 Configuration
-
-This plugin can be configured via options when initializing:
-
-```typescript
-createPlugin({
-});
+```bash
+tsdiapi generate dboptions feature
 ```
 
-| Option            | Type   | Default | Description |
-|------------------|-------|---------|-------------|
+This allows defining a custom database model and gaining full control over API behavior.
 
 ---
 
-## 📌 How to Use
+## Summary  
 
-After installation, you can use this plugin as part of your **TSDIAPI** application. If additional configuration is required, it can be passed as an object when initializing the plugin.
-
-### Example Usage:
-
-```typescript
-import { createApp } from "@tsdiapi/server";
-import createPlugin from "@tsdiapi/dboptions";
-
-const app = createApp({
-    plugins: [createPlugin({
-    })]
-});
-
-app.start();
-```
-
----
-
-## 🔗 Related Plugins
-
-You can find more **TSDIAPI** plugins here:  
-🔗 [Available Plugins](https://www.npmjs.com/search?q=%40tsdiapi)
-
----
-
-## 👨‍💻 Contributing
-
-Contributions are always welcome! If you have ideas for improving this plugin, feel free to open a pull request.
-
-**Author:** unbywyd  
-**GitHub Repository:** [https://github.com/unbywyd/tsdiapi-dboptions](https://github.com/unbywyd/tsdiapi-dboptions)  
-
-📧 **Contact:** unbywyd@gmail.com
-
-🚀 Happy coding with **TSDIAPI**! 🎉
+The **@tsdiapi/dboptions** plugin extends **TSDIAPI** with a database-driven configuration system. It supports Prisma, DTO-based transformations, and flexible authentication control. Use **auto-registration** for quick setup or **manual generation** for advanced customization. 🚀

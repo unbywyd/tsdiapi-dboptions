@@ -11,6 +11,20 @@ import DboptionService, { DboptionConfigService, Dboptions } from "./dboption.se
 import { SuccessResponse, Summary, RequestGuard } from "@tsdiapi/server";
 import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
 import { Request, Response, NextFunction } from "express";
+import { Expose } from "class-transformer";
+import { IsObject } from "class-validator";
+
+export class OptionsResponseDTO {
+    @Expose()
+    @IsObject()
+    options: Record<string, never> = {};
+}
+
+export class OptionResponseDTO {
+    @Expose()
+    @IsObject()
+    option: Record<string, never> = {};
+}
 
 @Service()
 @OpenAPI({
@@ -36,24 +50,21 @@ export class DboptionController {
         security: [{ bearerAuth: [] }],
         description: "This endpoint is only accessible by admin"
     })
+    @SuccessResponse(OptionsResponseDTO)
     public async createDboption(
         @Body() config: InputDboptionDTO
     ) {
-        return this.dboptionService.createConfig(config);
+        const options = await this.dboptionService.createConfig(config);
+        return { options };
     }
 
     @Get("/")
     @Summary("Get Dboption")
+    @SuccessResponse(OptionsResponseDTO)
     public async getDboption() {
-        return this.dboptionService.getConfigs();
+        const options = await this.dboptionService.getConfigs();
+        return { options };
     }
-
-    /*@JWTGuard({
-        validateSession: (session) => {
-            return session.role === "ADMIN" ? true : "Only admin can create dboption";
-        },
-        guardDescription: "Only admin can create dboption"
-    })*/
 
     @Get("/source/:name")
     @SuccessResponse(OutputDboptionDTO)
@@ -66,9 +77,11 @@ export class DboptionController {
 
     @Get("/:name")
     @Summary("Get Dboption by name")
+    @SuccessResponse(OptionResponseDTO)
     public async getDboptionByName(
         @Param("name") name: string
     ) {
-        return this.dboptionService.getConfig(name);
+        const option = this.dboptionService.getConfig(name);
+        return { option };
     }
 }

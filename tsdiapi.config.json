@@ -74,7 +74,9 @@
       "postMessages": [
         "✅ Feature {{name}} generated successfully!"
       ],
-      "afterGenerate": "npx prisma generate"
+      "afterGenerate": {
+        "command": "npx prisma generate"
+      }
     }
   ],
   "postFileModifications": [
@@ -91,5 +93,8 @@
   "postMessages": [
     "✅ Database options successfully installed!"
   ],
-  "afterInstall": "npx prisma generate"
+  "afterInstall": {
+    "command": "npx prisma generate",
+    "when": "DBOPTIONS_AUTO_REGISTER_CONTROLLERS == true"
+  }
 }
