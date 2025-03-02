@@ -59,7 +59,14 @@ let DboptionConfigService = class DboptionConfigService {
         this.requestGuard = guard;
     }
     async validateAccess(req) {
-        return this.requestGuard(req);
+        try {
+            const result = await this.requestGuard(req);
+            return result;
+        }
+        catch (e) {
+            console.error(e);
+            return false;
+        }
     }
 };
 exports.DboptionConfigService = DboptionConfigService;

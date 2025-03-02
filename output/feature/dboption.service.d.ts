@@ -1,13 +1,14 @@
 import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
 import type { Request } from "express";
 export type ClassInstance<T> = new (...args: any[]) => T;
+export type GuardType = (req: Request) => Promise<boolean> | boolean;
 export declare class DboptionConfigService {
     config: Record<string, any>;
     dto: ClassInstance<any> | null;
     setDTO(dto: ClassInstance<any>): void;
     getDTO(): ClassInstance<any>;
-    requestGuard: (req: Request) => boolean;
-    setRequestGuard(guard: (req: Request) => boolean): void;
+    requestGuard: GuardType;
+    setRequestGuard(guard: GuardType): void;
     validateAccess(req: Request): Promise<boolean>;
 }
 export interface Dboptions {

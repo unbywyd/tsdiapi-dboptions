@@ -4,7 +4,7 @@ import { Request } from "express";
 import { ClassInstance } from "./feature/dboption.service";
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
-    adminGuard?: (req: Request) => boolean;
+    adminGuard?: (req: Request) => Promise<boolean>;
     configDTO?: ClassInstance<any>;
 };
 export declare class DbOptionsPlugin implements AppPlugin {

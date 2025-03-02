@@ -91,6 +91,10 @@ __decorate([
         return true;
     }),
     (0, server_1.Summary)("Create Dboption"),
+    (0, routing_controllers_openapi_1.OpenAPI)({
+        security: [{ bearerAuth: [] }],
+        description: "This endpoint is only accessible by admin"
+    }),
     __param(0, (0, routing_controllers_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dboption_dto_1.InputDboptionDTO]),
