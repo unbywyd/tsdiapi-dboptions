@@ -72,7 +72,8 @@
         "prisma/schema.prisma"
       ],
       "postMessages": [
-        "✅ Feature {{name}} generated successfully!"
+        "✅ Feature {{name}} generated successfully!",
+        "⚠️ Please ensure to run the necessary database migrations and verify the Prisma database connection. This is the user's responsibility."
       ],
       "afterGenerate": {
         "command": "npx prisma generate"
@@ -91,7 +92,8 @@
     }
   ],
   "postMessages": [
-    "✅ Database options successfully installed!"
+    "✅ Database options successfully installed!",
+    "⚠️ Please ensure to run the necessary database migrations and verify the Prisma database connection. This is the user's responsibility."
   ],
   "afterInstall": {
     "command": "npx prisma generate",
