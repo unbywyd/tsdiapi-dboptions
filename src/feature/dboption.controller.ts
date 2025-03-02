@@ -7,12 +7,12 @@ import {
 } from "routing-controllers";
 import Container, { Service } from "typedi";
 import { OpenAPI } from "routing-controllers-openapi";
-import DboptionService, { DboptionConfigService } from "./dboption.service";
+import DboptionService, { DboptionConfigService, Dboptions } from "./dboption.service";
 import { SuccessResponse, Summary, RequestGuard } from "@tsdiapi/server";
 import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
 import { Request, Response, NextFunction } from "express";
-import { Dboptions } from "@src/external/dboptions.config";
 
+class RecordDTO { }
 @Service()
 @OpenAPI({
     tags: ["Dboption"],
@@ -33,7 +33,7 @@ export class DboptionController {
         return true;
     })
     @Summary("Create Dboption")
-    @SuccessResponse(Dboptions)
+    @SuccessResponse(RecordDTO)
     public async createDboption(
         @Body() config: InputDboptionDTO
     ) {
@@ -41,7 +41,7 @@ export class DboptionController {
     }
 
     @Get("/")
-    @SuccessResponse(Dboptions)
+    @SuccessResponse(RecordDTO)
     @Summary("Get Dboption")
     public async getDboption() {
         return this.dboptionService.getConfigs();
@@ -64,7 +64,7 @@ export class DboptionController {
     }
 
     @Get("/:name")
-    @SuccessResponse(Dboptions)
+    @SuccessResponse(RecordDTO)
     @Summary("Get Dboption by name")
     public async getDboptionByName(
         @Param("name") name: string

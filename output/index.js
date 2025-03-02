@@ -7,6 +7,8 @@ exports.DbOptionsPlugin = void 0;
 exports.default = createPlugin;
 require("reflect-metadata");
 const path_1 = __importDefault(require("path"));
+const dboption_service_1 = require("./feature/dboption.service");
+const typedi_1 = __importDefault(require("typedi"));
 class DbOptionsPlugin {
     name = "dboptions";
     context;
@@ -14,15 +16,21 @@ class DbOptionsPlugin {
     globControllersPath = null;
     constructor(config) {
         this.config = { ...config };
+        const dboptionConfig = typedi_1.default.get(dboption_service_1.DboptionConfigService);
+        if (this.config.configDTO) {
+            dboptionConfig.setDTO(this.config.configDTO);
+        }
+        if (this.config.adminGuard) {
+            dboptionConfig.setRequestGuard(this.config.adminGuard);
+        }
     }
     async onInit(ctx) {
         this.context = ctx;
         const appConfig = this.context.config.appConfig || {};
         this.config.autoRegisterControllers = appConfig?.autoRegisterControllers || appConfig['DBOPTIONS_AUTO_REGISTER_CONTROLLERS'] || this.config.autoRegisterControllers;
         if (this.config.autoRegisterControllers) {
-            this.globControllersPath = path_1.default.join(__dirname, '../') + path_1.default.normalize("output/controllers/**/*.controller{.ts,.js}");
+            this.globControllersPath = path_1.default.join(__dirname, '../') + path_1.default.normalize("output/feature/**/*.controller{.ts,.js}");
         }
-        this.config.entityName = appConfig?.entityName || appConfig['DBOPTIONS_ENTITY_NAME'] || this.config.entityName;
         ctx.logger.info("✅ tsdiapi-dboptions Plugin initialized.");
     }
 }

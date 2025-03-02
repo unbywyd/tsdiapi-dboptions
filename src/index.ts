@@ -33,7 +33,7 @@ export class DbOptionsPlugin implements AppPlugin {
         const appConfig = this.context.config.appConfig || {};
         this.config.autoRegisterControllers = appConfig?.autoRegisterControllers || appConfig['DBOPTIONS_AUTO_REGISTER_CONTROLLERS'] || this.config.autoRegisterControllers;
         if (this.config.autoRegisterControllers) {
-            this.globControllersPath = path.join(__dirname, '../') + path.normalize("output/controllers/**/*.controller{.ts,.js}");
+            this.globControllersPath = path.join(__dirname, '../') + path.normalize("output/feature/**/*.controller{.ts,.js}");
         }
 
         ctx.logger.info("✅ tsdiapi-dboptions Plugin initialized.");
