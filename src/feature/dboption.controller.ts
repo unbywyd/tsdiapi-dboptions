@@ -32,6 +32,10 @@ export class DboptionController {
         return true;
     })
     @Summary("Create Dboption")
+    @OpenAPI({
+        security: [{ bearerAuth: [] }],
+        description: "This endpoint is only accessible by admin"
+    })
     public async createDboption(
         @Body() config: InputDboptionDTO
     ) {

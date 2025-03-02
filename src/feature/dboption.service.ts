@@ -6,7 +6,7 @@ import { toDTO } from "@tsdiapi/server";
 import type { Request } from "express";
 
 export type ClassInstance<T> = new (...args: any[]) => T;
-
+export type GuardType = (req: Request) => Promise<boolean> | boolean;
 @Service()
 export class DboptionConfigService {
     config: Record<string, any> = {};
@@ -17,12 +17,18 @@ export class DboptionConfigService {
     getDTO() {
         return this.dto;
     }
-    requestGuard: (req: Request) => boolean = () => true;
-    setRequestGuard(guard: (req: Request) => boolean) {
+    requestGuard: GuardType = () => true;
+    setRequestGuard(guard: GuardType) {
         this.requestGuard = guard;
     }
     async validateAccess(req: Request): Promise<boolean> {
-        return this.requestGuard(req);
+        try {
+            const result = await this.requestGuard(req);
+            return result;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
     }
 }
 

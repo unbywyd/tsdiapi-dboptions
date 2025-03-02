@@ -7,7 +7,7 @@ import Container from "typedi";
 
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
-    adminGuard?: (req: Request) => boolean;
+    adminGuard?: (req: Request) => Promise<boolean>;
     configDTO?: ClassInstance<any>;
 };
 
