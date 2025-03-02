@@ -52,8 +52,6 @@ const routing_controllers_openapi_1 = require("routing-controllers-openapi");
 const dboption_service_1 = __importStar(require("./dboption.service"));
 const server_1 = require("@tsdiapi/server");
 const dboption_dto_1 = require("./dboption.dto");
-class RecordDTO {
-}
 let DboptionController = class DboptionController {
     dboptionService;
     constructor(dboptionService) {
@@ -93,7 +91,6 @@ __decorate([
         return true;
     }),
     (0, server_1.Summary)("Create Dboption"),
-    (0, server_1.SuccessResponse)(RecordDTO),
     __param(0, (0, routing_controllers_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dboption_dto_1.InputDboptionDTO]),
@@ -101,7 +98,6 @@ __decorate([
 ], DboptionController.prototype, "createDboption", null);
 __decorate([
     (0, routing_controllers_1.Get)("/"),
-    (0, server_1.SuccessResponse)(RecordDTO),
     (0, server_1.Summary)("Get Dboption"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -118,7 +114,6 @@ __decorate([
 ], DboptionController.prototype, "getSourceDboptionByName", null);
 __decorate([
     (0, routing_controllers_1.Get)("/:name"),
-    (0, server_1.SuccessResponse)(RecordDTO),
     (0, server_1.Summary)("Get Dboption by name"),
     __param(0, (0, routing_controllers_1.Param)("name")),
     __metadata("design:type", Function),
