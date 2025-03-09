@@ -61,26 +61,16 @@
           "isHandlebarsTemplate": true
         }
       ],
-      "fileModifications": [
+      "prismaScripts": [
         {
-          "path": "prisma/schema.prisma",
-          "mode": "append",
-          "isHandlebarsTemplate": true,
-          "match": "model\\s+{{pascalCase entityName}}\\s*\\{",
-          "expected": false,
-          "content": "model {{pascalCase entityName}} {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
+          "command": "ADD MODEL {{pascalCase entityName}} ({id String @id @default(cuid()) | name String @unique | value Json});",
+          "description": "Add the model to the Prisma schema"
         }
-      ],
-      "requiredPaths": [
-        "prisma/schema.prisma"
       ],
       "postMessages": [
         "✅ Feature {{name}} generated successfully!",
         "⚠️ Please ensure to run the necessary database migrations and verify the Prisma database connection. This is the user's responsibility."
-      ],
-      "afterGenerate": {
-        "command": "npx prisma generate"
-      }
+      ]
     }
   ],
   "preMessages": [
