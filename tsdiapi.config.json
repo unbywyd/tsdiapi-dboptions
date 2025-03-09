@@ -15,13 +15,16 @@
       }
     }
   ],
-  "requiredPackages": [
-    "@tsdiapi/prisma",
-    "@prisma/client"
-  ],
-  "requiredPaths": [
-    "prisma/schema.prisma"
-  ],
+  "prisma": {
+    "required": true,
+    "scripts": [
+      {
+        "when": "DBOPTIONS_AUTO_REGISTER_CONTROLLERS == true",
+        "command": "ADD MODEL DbOption ({id String @id @default(cuid()) | name String @unique | value Json});",
+        "description": "Add the DbOption model to the Prisma schema"
+      }
+    ]
+  },
   "files": [
     {
       "source": "files/src/*.ts",
@@ -80,29 +83,11 @@
       }
     }
   ],
-  "postFileModifications": [
-    {
-      "path": "prisma/schema.prisma",
-      "mode": "append",
-      "when": "DBOPTIONS_AUTO_REGISTER_CONTROLLERS == true",
-      "match": "model\\s+DbOption\\s*\\{",
-      "expected": false,
-      "isHandlebarsTemplate": true,
-      "content": "model DbOption {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  value     Json\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}"
-    }
-  ],
   "preMessages": [
-    "⚠️ Before proceeding with the configuration, ensure that Prisma is installed and set up.",
-    "ℹ️ If Prisma is not installed, add the plugin using: tsdiapi plugins add prisma",
-    "❌ You can interrupt the configuration now if the plugin has not been added previously.",
-    "✅ To resume configuration later, use: tsdiapi plugins config dboptions"
+    "👋 Welcome to the TSDIAPI dboptions plugin configuration!"
   ],
   "postMessages": [
-    "✅ Database options successfully installed!",
+    "✅ Plugin successfully installed!",
     "⚠️ Please ensure to run the necessary database migrations and verify the Prisma database connection. This is the user's responsibility."
-  ],
-  "afterInstall": {
-    "command": "npx prisma generate",
-    "when": "DBOPTIONS_AUTO_REGISTER_CONTROLLERS == true"
-  }
+  ]
 }
