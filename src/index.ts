@@ -4,6 +4,10 @@ import path from "path";
 import type { Request } from "express";
 import { ClassInstance, DboptionConfigService } from "./feature/dboption.service.js";
 import { Container } from "typedi";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
