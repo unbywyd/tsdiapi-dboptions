@@ -1,7 +1,7 @@
 {
   "name": "@tsdiapi/dboptions",
   "description": "A TSDIAPI plugin that extends API functionality by adding a key management system and a convenient API for retrieving and saving configuration options in a database.",
-  "version": "0.2.0-alpha.3",
+  "version": "0.1.0",
   "main": "output/index.js",
   "types": "output/index.d.ts",
   "type": "module",
@@ -43,8 +43,8 @@
     "@types/express": "^5.0.0"
   },
   "peerDependencies": {
-    "@tsdiapi/prisma": "^0.0.2-alpha",
-    "@tsdiapi/server": "^0.0.2-alpha",
+    "@tsdiapi/prisma": "^0.1.0",
+    "@tsdiapi/server": "^0.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
