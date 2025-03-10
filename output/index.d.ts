@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import type { AppContext, AppPlugin } from "@tsdiapi/server";
-import { Request } from "express";
-import { ClassInstance } from "./feature/dboption.service";
+import type { Request } from "express";
+import { ClassInstance } from "./feature/dboption.service.js";
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
     adminGuard?: (req: Request) => Promise<boolean>;

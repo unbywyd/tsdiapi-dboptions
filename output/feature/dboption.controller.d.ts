@@ -1,5 +1,5 @@
-import DboptionService, { Dboptions } from "./dboption.service";
-import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
+import DboptionService, { Dboptions } from "./dboption.service.js";
+import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto.js";
 export declare class OptionsResponseDTO {
     options: Record<string, never>;
 }

@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,68 +7,64 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.OutputDboptionDTO = exports.InputDboptionDTO = void 0;
-const class_transformer_1 = require("class-transformer");
-const class_validator_1 = require("class-validator");
-class InputDboptionDTO {
+import { Expose, Type } from "class-transformer";
+import { IsDate, IsOptional, IsString } from "class-validator";
+export class InputDboptionDTO {
     name;
     value;
 }
-exports.InputDboptionDTO = InputDboptionDTO;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_transformer_1.Type)(() => String),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    IsString(),
+    Type(() => String),
+    Expose(),
     __metadata("design:type", String)
 ], InputDboptionDTO.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    Expose(),
     __metadata("design:type", Object)
 ], InputDboptionDTO.prototype, "value", void 0);
-class OutputDboptionDTO {
+export class OutputDboptionDTO {
     id;
     name;
     value;
     createdAt;
     updatedAt;
 }
-exports.OutputDboptionDTO = OutputDboptionDTO;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_transformer_1.Type)(() => String),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    IsString(),
+    Type(() => String),
+    Expose(),
     __metadata("design:type", String)
 ], OutputDboptionDTO.prototype, "id", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_transformer_1.Type)(() => String),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    IsString(),
+    Type(() => String),
+    Expose(),
     __metadata("design:type", String)
 ], OutputDboptionDTO.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_transformer_1.Type)(() => String),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    IsString(),
+    Type(() => String),
+    Expose(),
     __metadata("design:type", String)
 ], OutputDboptionDTO.prototype, "value", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDate)(),
-    (0, class_transformer_1.Type)(() => Date),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    IsDate(),
+    Type(() => Date),
+    Expose(),
     __metadata("design:type", Date)
 ], OutputDboptionDTO.prototype, "createdAt", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDate)(),
-    (0, class_transformer_1.Type)(() => Date),
-    (0, class_transformer_1.Expose)(),
+    IsOptional(),
+    IsDate(),
+    Type(() => Date),
+    Expose(),
     __metadata("design:type", Date)
 ], OutputDboptionDTO.prototype, "updatedAt", void 0);
 //# sourceMappingURL=dboption.dto.js.map

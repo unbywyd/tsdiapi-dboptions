@@ -1,6 +1,6 @@
 import { plainToClass } from "class-transformer";
-import Container, { Service } from "typedi";
-import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
+import { Service, Container } from "typedi";
+import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto.js";
 import { client } from "@tsdiapi/prisma";
 import { toDTO } from "@tsdiapi/server";
 import type { Request } from "express";

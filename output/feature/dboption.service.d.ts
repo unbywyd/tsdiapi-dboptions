@@ -1,4 +1,4 @@
-import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
+import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto.js";
 import type { Request } from "express";
 export type ClassInstance<T> = new (...args: any[]) => T;
 export type GuardType = (req: Request) => Promise<boolean> | boolean;

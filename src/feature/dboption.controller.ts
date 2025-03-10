@@ -5,12 +5,12 @@ import {
     Get,
     Param
 } from "routing-controllers";
-import Container, { Service } from "typedi";
+import { Service, Container } from "typedi";
 import { OpenAPI } from "routing-controllers-openapi";
-import DboptionService, { DboptionConfigService, Dboptions } from "./dboption.service";
+import DboptionService, { DboptionConfigService, Dboptions } from "./dboption.service.js";
 import { SuccessResponse, Summary, RequestGuard } from "@tsdiapi/server";
-import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto";
-import { Request, Response, NextFunction } from "express";
+import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto.js";
+import type { Request } from "express";
 import { Expose } from "class-transformer";
 import { IsObject } from "class-validator";
 

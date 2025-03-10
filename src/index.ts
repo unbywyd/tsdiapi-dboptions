@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import type { AppContext, AppPlugin } from "@tsdiapi/server";
 import path from "path";
-import { Request } from "express";
-import { ClassInstance, DboptionConfigService } from "./feature/dboption.service";
-import Container from "typedi";
+import type { Request } from "express";
+import { ClassInstance, DboptionConfigService } from "./feature/dboption.service.js";
+import { Container } from "typedi";
 
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
