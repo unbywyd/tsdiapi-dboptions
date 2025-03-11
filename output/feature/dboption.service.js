@@ -8,7 +8,7 @@ import { plainToClass } from "class-transformer";
 import { Service, Container } from "typedi";
 import { OutputDboptionDTO } from "./dboption.dto.js";
 import { client } from "@tsdiapi/prisma";
-import { toDTO } from "@tsdiapi/server";
+import { responseError, toDTO } from "@tsdiapi/server";
 let DboptionConfigService = class DboptionConfigService {
     config = {};
     dto = null;
@@ -137,6 +137,9 @@ let DboptionService = class DboptionService {
             const dtoClass = Container.get(DboptionConfigService).getDTO();
             const config = {};
             config[data.name] = data.value;
+            if (dtoClass && !(data.name in dtoClass)) {
+                return responseError(`The key ${data.name} is not in the config.`);
+            }
             const dto = dtoClass ? toDTO(dtoClass, config) : null;
             const value = dtoClass ? dto[data.name] : data.value;
             const prev = await client.dbOption.findUnique({
