@@ -1,27 +1,27 @@
-import { plainToClass } from "class-transformer";
 import { Service, Container } from "typedi";
-import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto.js";
+import { InputDboptionDTOType, OutputDboptionDTO, OutputDboptionDTOType } from "./dboption.dto.js";
+import { FastifyRequest } from "fastify";
+import { Value } from "@sinclair/typebox/value";
+import { TObject } from "@sinclair/typebox";
 import { client } from "@tsdiapi/prisma";
-import { responseError, toDTO } from "@tsdiapi/server";
-import type { Request } from "express";
 
 export type ClassInstance<T> = new (...args: any[]) => T;
-export type GuardType = (req: Request) => Promise<boolean> | boolean;
+export type GuardType = (req: FastifyRequest) => Promise<boolean> | boolean;
 @Service()
 export class DboptionConfigService {
     config: Record<string, any> = {};
-    dto: ClassInstance<any> | null = null;
-    setDTO(dto: ClassInstance<any>) {
-        this.dto = dto;
+    tSchema: TObject = null;
+    setDTO(tSchema: TObject) {
+        this.tSchema = tSchema;
     }
-    getDTO() {
-        return this.dto;
+    getTSchema() {
+        return this.tSchema;
     }
     requestGuard: GuardType = () => true;
     setRequestGuard(guard: GuardType) {
         this.requestGuard = guard;
     }
-    async validateAccess(req: Request): Promise<boolean> {
+    async validateAccess(req: FastifyRequest): Promise<boolean> {
         try {
             const result = await this.requestGuard(req);
             return result;
@@ -33,7 +33,7 @@ export class DboptionConfigService {
 }
 
 export interface Dboptions {
-    [key: string]: any;
+    [key: string]: never;
 }
 
 @Service()
@@ -42,7 +42,7 @@ export default class DboptionService {
         try {
             const config = await client.dbOption.findUnique({
                 where: {
-                    name: name
+                    name: name as string
                 }
             });
             if (!config) {
@@ -57,7 +57,7 @@ export default class DboptionService {
 
     async getConfig(name: string): Promise<Dboptions> {
         try {
-            const dto = Container.get(DboptionConfigService).getDTO();
+            const tSchema = Container.get(DboptionConfigService).getTSchema();
             const config = await client.dbOption.findUnique({
                 where: {
                     name: name
@@ -68,14 +68,15 @@ export default class DboptionService {
                     [name]: null as any
                 } as Dboptions;
             }
-            if (!dto) {
+            if (!tSchema) {
                 return {
                     [name]: config.value
                 } as Dboptions;
             }
-            return toDTO(dto, {
+
+            return Value.Cast(tSchema, {
                 [name]: config.value
-            });
+            }) as Dboptions;
         } catch (e) {
             console.error(e);
             return {
@@ -84,7 +85,7 @@ export default class DboptionService {
         }
     }
 
-    async getSourceConfig(name: string): Promise<OutputDboptionDTO> {
+    async getSourceConfig(name: string): Promise<OutputDboptionDTOType> {
         try {
             const config = await client.dbOption.findUnique({
                 where: {
@@ -95,21 +96,21 @@ export default class DboptionService {
                 return {
                     name: name,
                     value: null as any
-                } as OutputDboptionDTO;
+                } as OutputDboptionDTOType;
             }
-            return toDTO(OutputDboptionDTO, config);
+            return Value.Cast(OutputDboptionDTO, config) as OutputDboptionDTOType;
         } catch (e) {
             console.error(e);
             return {
                 name: name,
                 value: null as any
-            } as OutputDboptionDTO;
+            } as OutputDboptionDTOType;
         }
     }
 
     async getConfigs(): Promise<Dboptions> {
         try {
-            const dto = Container.get(DboptionConfigService).getDTO();
+            const tSchema = Container.get(DboptionConfigService).getTSchema();
             const config: Record<string, any> = {};
             const appKeys = await client.dbOption.findMany({
                 orderBy: {
@@ -119,29 +120,26 @@ export default class DboptionService {
             for (const key of appKeys) {
                 config[key.name] = key.value;
             }
-            if (!dto) {
+            if (!tSchema) {
                 return config as Dboptions;
             }
-            return plainToClass(dto, config, {
-                exposeDefaultValues: true,
-                excludeExtraneousValues: true,
-            });
+            return Value.Cast(tSchema, config) as Dboptions;
         } catch (e) {
             console.error(e);
             return {} as Dboptions;
         }
     }
 
-    async createConfig(data: InputDboptionDTO): Promise<Dboptions> {
+    async createConfig(data: InputDboptionDTOType): Promise<Dboptions> {
         try {
-            const dtoClass = Container.get(DboptionConfigService).getDTO();
+            const tSchema = Container.get(DboptionConfigService).getTSchema();
             const config: Partial<Record<string, any>> = {};
             config[data.name] = data.value;
-            if (dtoClass && !(data.name in dtoClass)) {
-                return responseError(`The key ${data.name} is not in the config.`);
+            if (tSchema && !(data.name in tSchema)) {
+                throw new Error(`The key ${data.name} is not in the config.`);
             }
-            const dto = dtoClass ? toDTO<any>(dtoClass, config) : null;
-            const value = dtoClass ? dto[data.name] : data.value;
+            const dto = tSchema ? Value.Cast(tSchema, config) : null;
+            const value = tSchema ? dto[data.name] : data.value;
             const prev = await client.dbOption.findUnique({
                 where: {
                     name: data.name

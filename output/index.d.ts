@@ -1,17 +1,16 @@
 import "reflect-metadata";
 import type { AppContext, AppPlugin } from "@tsdiapi/server";
-import type { Request } from "express";
-import { ClassInstance } from "./feature/dboption.service.js";
+import { FastifyRequest } from "fastify/fastify.js";
+import { TObject } from "@sinclair/typebox";
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
-    adminGuard?: (req: Request) => Promise<boolean>;
-    configDTO?: ClassInstance<any>;
+    adminGuard?: (req: FastifyRequest) => Promise<boolean>;
+    tSchema?: TObject;
 };
 export declare class DbOptionsPlugin implements AppPlugin {
     name: string;
     context: AppContext;
     config: PluginOptions;
-    globControllersPath: string | null;
     constructor(config?: PluginOptions);
     onInit(ctx: AppContext): Promise<void>;
 }

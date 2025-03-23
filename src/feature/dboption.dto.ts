@@ -1,50 +1,26 @@
-import { Expose, Type } from "class-transformer";
-import { IsDate, IsOptional, IsString } from "class-validator";
+import { Type, Static } from "@sinclair/typebox";
 
 export interface OutputDboption {
     [key: string]: any;
 }
 
-export class InputDboptionDTO {
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    name?: string;
+export const InputDboptionDTO = Type.Object({
+    name: Type.Optional(Type.String()),
+    value: Type.Optional(Type.Any()),
+});
 
-    @IsOptional()
-    @Expose()
-    value?: any;
-}
+export type InputDboptionDTOType = Static<typeof InputDboptionDTO>;
 
-export class OutputDboptionDTO {
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    id?: string;
 
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    name?: string;
+export const OutputDboptionDTO = Type.Object({
+    id: Type.Optional(Type.String()),
+    name: Type.Optional(Type.String()),
+    value: Type.Optional(Type.Any()),
+    createdAt: Type.Optional(Type.Any({ default: new Date().toISOString() })), 
+    updatedAt: Type.Optional(Type.Any({ default: new Date().toISOString() })),
+});
 
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    value?: string;
+export const OptionsResponseDTO = Type.Record(Type.String(), Type.Any());
+export type OptionsResponseDTOType = Static<typeof OptionsResponseDTO>;
 
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    @Expose()
-    createdAt?: Date;
-
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    @Expose()
-    updatedAt?: Date;
-}
+export type OutputDboptionDTOType = Static<typeof OutputDboptionDTO>;

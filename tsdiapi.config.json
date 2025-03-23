@@ -25,13 +25,6 @@
       }
     ]
   },
-  "files": [
-    {
-      "source": "files/src/*.ts",
-      "destination": "src/",
-      "isHandlebarsTemplate": true
-    }
-  ],
   "generators": [
     {
       "name": "feature",

@@ -1,31 +1,26 @@
 import "reflect-metadata";
 import type { AppContext, AppPlugin } from "@tsdiapi/server";
-import path from "path";
-import type { Request } from "express";
 import { ClassInstance, DboptionConfigService } from "./feature/dboption.service.js";
 import { Container } from "typedi";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+import { FastifyRequest } from "fastify/fastify.js";
+import { TObject } from "@sinclair/typebox";
+import controllers from "./feature/dboption.controller.js";
 export type PluginOptions = {
     autoRegisterControllers?: boolean;
-    adminGuard?: (req: Request) => Promise<boolean>;
-    configDTO?: ClassInstance<any>;
+    adminGuard?: (req: FastifyRequest) => Promise<boolean>;
+    tSchema?: TObject;
 };
 
 export class DbOptionsPlugin implements AppPlugin {
     name = "dboptions";
     context!: AppContext;
     config: PluginOptions;
-    globControllersPath: string | null = null;
 
     constructor(config?: PluginOptions) {
         this.config = { ...config };
         const dboptionConfig = Container.get(DboptionConfigService);
-        if (this.config.configDTO) {
-            dboptionConfig.setDTO(this.config.configDTO);
+        if (this.config.tSchema) {
+            dboptionConfig.setDTO(this.config.tSchema);
         }
         if (this.config.adminGuard) {
             dboptionConfig.setRequestGuard(this.config.adminGuard);
@@ -34,13 +29,10 @@ export class DbOptionsPlugin implements AppPlugin {
 
     async onInit(ctx: AppContext) {
         this.context = ctx;
-        const appConfig = this.context.config.appConfig || {};
-        this.config.autoRegisterControllers = appConfig?.autoRegisterControllers || appConfig['DBOPTIONS_AUTO_REGISTER_CONTROLLERS'] || this.config.autoRegisterControllers;
-        if (this.config.autoRegisterControllers) {
-            this.globControllersPath = path.join(__dirname, '../') + path.normalize("output/feature/**/*.controller{.ts,.js}");
-        }
+        const config = ctx.projectConfig;
+        this.config.autoRegisterControllers = config.get('DBOPTIONS_AUTO_REGISTER_CONTROLLERS', this.config.autoRegisterControllers) as boolean;
 
-        ctx.logger.info("✅ tsdiapi-dboptions Plugin initialized.");
+        controllers(ctx);
     }
 }
 

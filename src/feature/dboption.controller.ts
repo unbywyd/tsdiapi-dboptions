@@ -1,87 +1,93 @@
-import {
-    JsonController,
-    Post,
-    Body,
-    Get,
-    Param
-} from "routing-controllers";
-import { Service, Container } from "typedi";
-import { OpenAPI } from "routing-controllers-openapi";
+
+import { Container } from "typedi";
 import DboptionService, { DboptionConfigService, Dboptions } from "./dboption.service.js";
-import { SuccessResponse, Summary, RequestGuard } from "@tsdiapi/server";
-import { InputDboptionDTO, OutputDboptionDTO } from "./dboption.dto.js";
-import type { Request } from "express";
-import { Expose } from "class-transformer";
-import { IsObject } from "class-validator";
+import { AppContext } from "@tsdiapi/server";
+import { Type } from "@sinclair/typebox";
+import { InputDboptionDTO, OptionsResponseDTO, OutputDboptionDTO } from "./dboption.dto.js";
 
-export class OptionsResponseDTO {
-    @Expose()
-    @IsObject()
-    options: Record<string, never> = {};
-}
-
-export class OptionResponseDTO {
-    @Expose()
-    @IsObject()
-    option: Record<string, never> = {};
-}
-
-@Service()
-@OpenAPI({
-    tags: ["Dboption"],
-})
-@JsonController("dboption")
-export class DboptionController {
-    constructor(private dboptionService: DboptionService) { }
-    @Post("/")
-    @RequestGuard(async (req: Request) => {
-        const dboptionConfig = Container.get(DboptionConfigService);
-        const result = await dboptionConfig.validateAccess(req);
-        if (!result) {
+export const FastifyError = Type.Object({
+    message: Type.String(),
+});
+export default function controllers({ useRoute }: AppContext) {
+    const dboptionService = Container.get(DboptionService);
+    useRoute()
+        .post("/dboption")
+        .code(401, FastifyError)
+        .auth('bearer')
+        .code(200, OptionsResponseDTO)
+        .description("Create Dboption")
+        .summary("Create Dboption")
+        .tags(["Dboption"])
+        .body(InputDboptionDTO)
+        .guard(async (req) => {
+            const dboptionConfig = Container.get(DboptionConfigService);
+            const result = await dboptionConfig.validateAccess(req);
+            if (!result) {
+                return {
+                    status: 401,
+                    data: {
+                        message: "Unauthorized"
+                    }
+                };
+            }
+            return true;
+        })
+        .handler(async (req, res) => {
+            const config = req.body as Dboptions;
+            const options = await dboptionService.createConfig(config);
             return {
-                status: 401,
-                message: "Unauthorized"
-            };
-        }
-        return true;
-    })
-    @Summary("Create Dboption")
-    @OpenAPI({
-        security: [{ bearerAuth: [] }],
-        description: "This endpoint is only accessible by admin"
-    })
-    @SuccessResponse(OptionsResponseDTO)
-    public async createDboption(
-        @Body() config: InputDboptionDTO
-    ) {
-        const options = await this.dboptionService.createConfig(config);
-        return { options };
-    }
+                status: 200,
+                data: options
+            }
+        }).build();
 
-    @Get("/")
-    @Summary("Get Dboption")
-    @SuccessResponse(OptionsResponseDTO)
-    public async getDboption() {
-        const options = await this.dboptionService.getConfigs();
-        return { options };
-    }
+    useRoute()
+        .get("/dboptions")
+        .code(200, OptionsResponseDTO)
+        .description("Get Dboption")
+        .summary("Get Dboption")
+        .tags(["Dboption"])
+        .handler(async () => {
+            const options = await dboptionService.getConfigs();
+            return {
+                status: 200,
+                data: options
+            }
+        }).build();
 
-    @Get("/source/:name")
-    @SuccessResponse(OutputDboptionDTO)
-    @Summary("Get source Dboption by name")
-    public async getSourceDboptionByName(
-        @Param("name") name: string
-    ) {
-        return this.dboptionService.getSourceConfig(name);
-    }
+    useRoute()
+        .get("/dboption/source/:name")
+        .code(200, OutputDboptionDTO)
+        .description("Get source Dboption by name")
+        .summary("Get source Dboption by name")
+        .tags(["Dboption"])
+        .params(Type.Object({
+            name: Type.String()
+        }))
+        .handler(async (req) => {
+            const name = req.params.name;
+            const options = await dboptionService.getSourceConfig(name);
+            return {
+                status: 200,
+                data: options
+            }
+        }).build();
 
-    @Get("/:name")
-    @Summary("Get Dboption by name")
-    @SuccessResponse(OptionResponseDTO)
-    public async getDboptionByName(
-        @Param("name") name: string
-    ) {
-        const option = this.dboptionService.getConfig(name);
-        return { option };
-    }
+    useRoute()
+        .get("/dboption/:name")
+        .code(200, OptionsResponseDTO)
+        .description("Get Dboption by name")
+        .summary("Get Dboption by name")
+        .tags(["Dboption"])
+        .params(Type.Object({
+            name: Type.String()
+        }))
+        .handler(async (req) => {
+            const name = req.params.name;
+            const options = await dboptionService.getConfig(name);
+            return {
+                status: 200,
+                data: options
+            }
+        }).build();
 }

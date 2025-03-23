@@ -1,21 +1,16 @@
 import "reflect-metadata";
-import path from "path";
 import { DboptionConfigService } from "./feature/dboption.service.js";
 import { Container } from "typedi";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import controllers from "./feature/dboption.controller.js";
 export class DbOptionsPlugin {
     name = "dboptions";
     context;
     config;
-    globControllersPath = null;
     constructor(config) {
         this.config = { ...config };
         const dboptionConfig = Container.get(DboptionConfigService);
-        if (this.config.configDTO) {
-            dboptionConfig.setDTO(this.config.configDTO);
+        if (this.config.tSchema) {
+            dboptionConfig.setDTO(this.config.tSchema);
         }
         if (this.config.adminGuard) {
             dboptionConfig.setRequestGuard(this.config.adminGuard);
@@ -23,12 +18,9 @@ export class DbOptionsPlugin {
     }
     async onInit(ctx) {
         this.context = ctx;
-        const appConfig = this.context.config.appConfig || {};
-        this.config.autoRegisterControllers = appConfig?.autoRegisterControllers || appConfig['DBOPTIONS_AUTO_REGISTER_CONTROLLERS'] || this.config.autoRegisterControllers;
-        if (this.config.autoRegisterControllers) {
-            this.globControllersPath = path.join(__dirname, '../') + path.normalize("output/feature/**/*.controller{.ts,.js}");
-        }
-        ctx.logger.info("✅ tsdiapi-dboptions Plugin initialized.");
+        const config = ctx.projectConfig;
+        this.config.autoRegisterControllers = config.get('DBOPTIONS_AUTO_REGISTER_CONTROLLERS', this.config.autoRegisterControllers);
+        controllers(ctx);
     }
 }
 export default function createPlugin(config) {

@@ -4,19 +4,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { plainToClass } from "class-transformer";
 import { Service, Container } from "typedi";
 import { OutputDboptionDTO } from "./dboption.dto.js";
+import { Value } from "@sinclair/typebox/value";
 import { client } from "@tsdiapi/prisma";
-import { responseError, toDTO } from "@tsdiapi/server";
 let DboptionConfigService = class DboptionConfigService {
     config = {};
-    dto = null;
-    setDTO(dto) {
-        this.dto = dto;
+    tSchema = null;
+    setDTO(tSchema) {
+        this.tSchema = tSchema;
     }
-    getDTO() {
-        return this.dto;
+    getTSchema() {
+        return this.tSchema;
     }
     requestGuard = () => true;
     setRequestGuard(guard) {
@@ -57,7 +56,7 @@ let DboptionService = class DboptionService {
     }
     async getConfig(name) {
         try {
-            const dto = Container.get(DboptionConfigService).getDTO();
+            const tSchema = Container.get(DboptionConfigService).getTSchema();
             const config = await client.dbOption.findUnique({
                 where: {
                     name: name
@@ -68,12 +67,12 @@ let DboptionService = class DboptionService {
                     [name]: null
                 };
             }
-            if (!dto) {
+            if (!tSchema) {
                 return {
                     [name]: config.value
                 };
             }
-            return toDTO(dto, {
+            return Value.Cast(tSchema, {
                 [name]: config.value
             });
         }
@@ -97,7 +96,7 @@ let DboptionService = class DboptionService {
                     value: null
                 };
             }
-            return toDTO(OutputDboptionDTO, config);
+            return Value.Cast(OutputDboptionDTO, config);
         }
         catch (e) {
             console.error(e);
@@ -109,7 +108,7 @@ let DboptionService = class DboptionService {
     }
     async getConfigs() {
         try {
-            const dto = Container.get(DboptionConfigService).getDTO();
+            const tSchema = Container.get(DboptionConfigService).getTSchema();
             const config = {};
             const appKeys = await client.dbOption.findMany({
                 orderBy: {
@@ -119,13 +118,10 @@ let DboptionService = class DboptionService {
             for (const key of appKeys) {
                 config[key.name] = key.value;
             }
-            if (!dto) {
+            if (!tSchema) {
                 return config;
             }
-            return plainToClass(dto, config, {
-                exposeDefaultValues: true,
-                excludeExtraneousValues: true,
-            });
+            return Value.Cast(tSchema, config);
         }
         catch (e) {
             console.error(e);
@@ -134,14 +130,14 @@ let DboptionService = class DboptionService {
     }
     async createConfig(data) {
         try {
-            const dtoClass = Container.get(DboptionConfigService).getDTO();
+            const tSchema = Container.get(DboptionConfigService).getTSchema();
             const config = {};
             config[data.name] = data.value;
-            if (dtoClass && !(data.name in dtoClass)) {
-                return responseError(`The key ${data.name} is not in the config.`);
+            if (tSchema && !(data.name in tSchema)) {
+                throw new Error(`The key ${data.name} is not in the config.`);
             }
-            const dto = dtoClass ? toDTO(dtoClass, config) : null;
-            const value = dtoClass ? dto[data.name] : data.value;
+            const dto = tSchema ? Value.Cast(tSchema, config) : null;
+            const value = tSchema ? dto[data.name] : data.value;
             const prev = await client.dbOption.findUnique({
                 where: {
                     name: data.name

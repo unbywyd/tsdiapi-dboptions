@@ -1,30 +1,29 @@
-import { plainToClass } from "class-transformer";
 import { Service } from "typedi";
-import { Input{{className}}DTO, Output{{className}}DTO } from "./{{kebabCase name}}.dto.js";
-import { {{pascalCase pluginName}} } from "@base/{{pluginName}}.config.js";
+import { Type, Static } from "@sinclair/typebox";
+import { Value } from "@sinclair/typebox/value";
 import { client } from "@tsdiapi/prisma";
-import { toDTO } from "@tsdiapi/server";
+import { Input{{className}}DTO, Output{{className}}DTO, {{pascalCase pluginName}} } from "./{{kebabCase name}}.dto.js";
 
 @Service()
 export default class {{className}}Service {
-    async getValue<K extends keyof  {{pascalCase pluginName}}>(name: K): Promise< {{pascalCase pluginName}}[K] | null> {
+    async getValue<K extends keyof Static<typeof {{pascalCase pluginName}}>>(name: K): Promise<Static<typeof {{pascalCase pluginName}}>[K] | null> {
         try {
             const config = await client.{{camelcase entityName}}.findUnique({
                 where: {
-                    name: name
+                    name: name as string
                 }
             });
             if (!config) {
                 return null;
             }
-            return config.value as  {{pascalCase pluginName}}[K];
+            return config.value as Static<typeof {{pascalCase pluginName}}>[K];
         } catch (e) {
             console.error(e);
             return null;
         }
     }
 
-    async getConfig(name: string): Promise< {{pascalCase pluginName}}> {
+    async getConfig(name: string): Promise<Static<typeof {{pascalCase pluginName}}>> {
         try {
             const config = await client.{{camelcase entityName}}.findUnique({
                 where: {
@@ -34,20 +33,20 @@ export default class {{className}}Service {
             if (!config) {
                 return {
                     [name]: null as any
-                } as  {{pascalCase pluginName}};
+                } as Static<typeof {{pascalCase pluginName}}>;
             }
-            return toDTO( {{pascalCase pluginName}}, {
+            return Value.Cast({{pascalCase pluginName}}, {
                 [name]: config.value
             });
         } catch (e) {
             console.error(e);
             return {
                 [name]: null as any
-            } as  {{pascalCase pluginName}};
+            } as Static<typeof {{pascalCase pluginName}}>;
         }
     }
 
-    async getSourceConfig(name: string): Promise<Output{{className}}DTO> {
+    async getSourceConfig(name: string): Promise<Static<typeof Output{{className}}DTO>> {
         try {
             const config = await client.{{camelcase entityName}}.findUnique({
                 where: {
@@ -58,19 +57,19 @@ export default class {{className}}Service {
                 return {
                     name: name,
                     value: null as any
-                } as Output{{className}}DTO;
+                } as Static<typeof Output{{className}}DTO>;
             }
-            return toDTO(Output{{className}}DTO, config);
+            return Value.Cast(Output{{className}}DTO, config);
         } catch (e) {
             console.error(e);
             return {
                 name: name,
                 value: null as any
-            } as Output{{className}}DTO;
+            } as Static<typeof Output{{className}}DTO>;
         }
     }
 
-    async getConfigs(): Promise< {{pascalCase pluginName}}> {
+    async getConfigs(): Promise<Static<typeof {{pascalCase pluginName}}>> {
         try {
             const config: Record<string, any> = {};
             const appKeys = await client.{{camelcase entityName}}.findMany({
@@ -78,24 +77,21 @@ export default class {{className}}Service {
                     name: 'asc'
                 }
             });
-            appKeys.forEach((key) => {
+            for (const key of appKeys) {
                 config[key.name] = key.value;
-            });
-            return plainToClass( {{pascalCase pluginName}}, config, {
-                exposeDefaultValues: true,
-                excludeExtraneousValues: true,
-            });
+            }
+            return Value.Cast({{pascalCase pluginName}}, config);
         } catch (e) {
             console.error(e);
-            return {} as  {{pascalCase pluginName}};
+            return {} as Static<typeof {{pascalCase pluginName}}>;
         }
     }
 
-    async createConfig(data: Input{{className}}DTO): Promise< {{pascalCase pluginName}}> {
+    async createConfig(data: Static<typeof Input{{className}}DTO>): Promise<Static<typeof {{pascalCase pluginName}}>> {
         try {
             const config: Partial<Record<string, any>> = {};
             config[data.name] = data.value;
-            const dto = toDTO<any>( {{pascalCase pluginName}}, config);
+            const dto = Value.Cast({{pascalCase pluginName}}, config);
             const value = dto[data.name];
             const prev = await client.{{camelcase entityName}}.findUnique({
                 where: {
@@ -123,7 +119,7 @@ export default class {{className}}Service {
             }
         } catch (e) {
             console.error(e);
-            return {} as  {{pascalCase pluginName}};
+            return {} as Static<typeof {{pascalCase pluginName}}>;
         }
     }
 }

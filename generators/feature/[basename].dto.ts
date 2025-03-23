@@ -1,50 +1,21 @@
-import { Expose, Type } from "class-transformer";
-import { IsDate, IsOptional, IsString } from "class-validator";
+import { Type, Static } from "@sinclair/typebox";
 
-export interface Output{{className}} {
-    [key: string]: any;
-}
+export const Input{{className}}DTO = Type.Object({
+    name: Type.Optional(Type.String()),
+    value: Type.Optional(Type.Any()),
+});
 
-export class Input{{className}}DTO {
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    name?: string;
+export type Input{{className}}DTOType = Static<typeof Input{{className}}DTO>;
 
-    @IsOptional()
-    @Expose()
-    value?: any;
-}
+export const Output{{className}}DTO = Type.Object({
+    id: Type.Optional(Type.String()),
+    name: Type.Optional(Type.String()),
+    value: Type.Optional(Type.Any()),
+    createdAt: Type.Optional(Type.String({ default: new Date().toISOString() })),
+    updatedAt: Type.Optional(Type.String({ default: new Date().toISOString() })),
+});
 
-export class Output{{className}}DTO {
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    id?: string;
+export type Output{{className}}DTOType = Static<typeof Output{{className}}DTO>;
 
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    name?: string;
-
-    @IsOptional()
-    @IsString()
-    @Type(() => String)
-    @Expose()
-    value?: string;
-
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    @Expose()
-    createdAt?: Date;
-
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    @Expose()
-    updatedAt?: Date;
-}
+export const {{pascalCase pluginName}} = Type.Record(Type.String(), Type.Any());
+export type {{pascalCase pluginName}}Type = Static<typeof {{pascalCase pluginName}}>;
