@@ -42,12 +42,6 @@
       ],
       "files": [
         {
-          "source": "files/src/*.ts",
-          "destination": "src/",
-          "isRoot": true,
-          "isHandlebarsTemplate": true
-        },
-        {
           "source": "generators/feature/*.*",
           "destination": "[name]",
           "overwrite": false,
