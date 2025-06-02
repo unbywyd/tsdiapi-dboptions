@@ -31,8 +31,11 @@ export class DbOptionsPlugin implements AppPlugin {
         this.context = ctx;
         const config = ctx.projectConfig;
         this.config.autoRegisterControllers = config.get('DBOPTIONS_AUTO_REGISTER_CONTROLLERS', this.config.autoRegisterControllers) as boolean;
-
-        controllers(ctx);
+    }
+    async preReady() {
+        if (this.config.autoRegisterControllers) {
+            controllers(this.context);
+        }
     }
 }
 

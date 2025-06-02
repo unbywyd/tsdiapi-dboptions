@@ -13,6 +13,7 @@ export declare class DbOptionsPlugin implements AppPlugin {
     config: PluginOptions;
     constructor(config?: PluginOptions);
     onInit(ctx: AppContext): Promise<void>;
+    preReady(): Promise<void>;
 }
 export default function createPlugin(config?: PluginOptions): DbOptionsPlugin;
 //# sourceMappingURL=index.d.ts.map
