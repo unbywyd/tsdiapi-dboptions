@@ -18,5 +18,8 @@ export const Output{{className}}DTO = addSchema(Type.Object({
 
 export type Output{{className}}DTOType = Static<typeof Output{{className}}DTO>;
 
-export const {{pascalCase pluginName}} = addSchema(Type.Record(Type.String(), Type.Any()), { $id: '{{pascalCase pluginName}}Schema' });
+export const {{pascalCase pluginName}} = addSchema(Type.Object({}, {
+    additionalProperties: true,
+    $id: '{{pascalCase pluginName}}Schema'
+}));
 export type {{pascalCase pluginName}}Type = Static<typeof {{pascalCase pluginName}}>;

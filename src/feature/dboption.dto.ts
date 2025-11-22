@@ -21,7 +21,10 @@ export const OutputDboptionDTO = addSchema(Type.Object({
     updatedAt: Type.Optional(Type.Any({ default: new Date().toISOString() })),
 }, { $id: 'OutputDboptionDTOSchema' }));
 
-export const OptionsResponseDTO = addSchema(Type.Record(Type.String(), Type.Any()), { $id: 'OptionsResponseDTOSchema' });
+export const OptionsResponseDTO = addSchema(Type.Object({}, {
+    additionalProperties: true,
+    $id: 'OptionsResponseDTOSchema'
+}));
 export type OptionsResponseDTOType = Static<typeof OptionsResponseDTO>;
 
 export type OutputDboptionDTOType = Static<typeof OutputDboptionDTO>;
