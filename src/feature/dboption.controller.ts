@@ -1,15 +1,21 @@
 
 import { Container } from "typedi";
 import DboptionService, { DboptionConfigService, Dboptions } from "./dboption.service.js";
-import { AppContext } from "@tsdiapi/server";
+import { AppContext, addSchema } from "@tsdiapi/server";
 import { Type } from "@sinclair/typebox";
 import { InputDboptionDTO, OptionsResponseDTO, OutputDboptionDTO } from "./dboption.dto.js";
 
-export const FastifyError = Type.Object({
+export const FastifyError = addSchema(Type.Object({
     message: Type.String(),
-});
+}, { $id: 'DboptionFastifyErrorSchema' }));
+
 export default function controllers({ useRoute }: AppContext) {
     const dboptionService = Container.get(DboptionService);
+
+    // Схема для параметра name используется в нескольких маршрутах
+    const DboptionNameParamSchema = addSchema(Type.Object({
+        name: Type.String()
+    }, { $id: 'DboptionNameParamSchema' }));
     useRoute()
         .post("/dboption")
         .code(401, FastifyError)
@@ -61,9 +67,7 @@ export default function controllers({ useRoute }: AppContext) {
         .description("Get source Dboption by name")
         .summary("Get source Dboption by name")
         .tags(["Dboption"])
-        .params(Type.Object({
-            name: Type.String()
-        }))
+        .params(DboptionNameParamSchema)
         .handler(async (req) => {
             const name = req.params.name;
             const options = await dboptionService.getSourceConfig(name);
@@ -79,9 +83,7 @@ export default function controllers({ useRoute }: AppContext) {
         .description("Get Dboption by name")
         .summary("Get Dboption by name")
         .tags(["Dboption"])
-        .params(Type.Object({
-            name: Type.String()
-        }))
+        .params(DboptionNameParamSchema)
         .handler(async (req) => {
             const name = req.params.name;
             const options = await dboptionService.getConfig(name);
